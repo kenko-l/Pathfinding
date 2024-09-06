@@ -16,9 +16,35 @@ for (let i = 0; i < rows; i++) {
   grid.push(row);
 }
 
+// Open the sidebar
+function openSidebar() {
+    document.getElementById("sidebar").style.width = "250px";
+  }
+  
+  // Close the sidebar
+  function closeSidebar() {
+    document.getElementById("sidebar").style.width = "0";
+  }
+  
+  // Toggle dropdown visibility
+  document.querySelectorAll('.dropdown-toggle').forEach(function(toggle) {
+    toggle.addEventListener('click', function() {
+      var dropdownContent = this.nextElementSibling;
+      if (dropdownContent.classList.contains('show')) {
+        dropdownContent.classList.remove('show');
+      } else {
+        document.querySelectorAll('.dropdown-content').forEach(function(content) {
+          content.classList.remove('show');
+        });
+        dropdownContent.classList.add('show');
+      }
+    });
+  });
+  
+
 // Set the start and end cells after the grid is created
-const startCell = grid[0][0]; // Top-left cell
-const endCell = grid[rows - 1][cols - 1]; // Bottom-right cell
+const startCell = grid[9][15]; // Top-left cell
+const endCell = grid[9][35]; // Bottom-right cell
 
 startCell.classList.add('start');
 startCell.id = 'startCell'; // Set an ID for drag-and-drop

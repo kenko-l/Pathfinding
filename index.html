@@ -1,16 +1,36 @@
 <!DOCTYPE html>
+<html lang="en">
 <head>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <table class="table">
-        <tr>
-            <th style="padding: 5px">Pathfinding Visualizer</th>
-            <th style="padding: 5px">Mazes & Patterns</th>
-            <th style="padding: 5px">Algorithms</th>
-        </tr>
-    </table>
+
+    <button class="open-btn" onclick="openSidebar()">☰ Settings</button>
+    <div id="Title">
+        <h1>Pathfinding Visualizer</h1>
+    </div>
+
+   
+      <div id="sidebar">
+        <a href="#" class="close-btn" onclick="closeSidebar()">&times;</a>
+        <a href="#" class="dropdown-toggle">Algorithms ▼</a>
+        <div class="dropdown-content">
+          <a href="#">Dijkstra's Algorithm</a>
+          <a href="#">A* Algorithm</a>
+          <a href="#">Breadth-First Search</a>
+        </div>
+        <a href="#" class="dropdown-toggle">Mazes & Patterns ▼</a>
+        <div class="dropdown-content">
+          <a href="#">Maze Generation</a>
+          <a href="#">Pattern 1</a>
+          <a href="#">Pattern 2</a>
+        </div>
+      </div>
+    
+
     <div id="grid"></div>
+
     <script src="script.js"></script>
         
 </body>
+</html>
