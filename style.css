@@ -1,0 +1,51 @@
+#grid {
+    display: grid;
+    grid-template-columns: repeat(50, 30px);
+    grid-template-rows: repeat(20, 30px);
+
+
+  }
+  
+  .cell {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #000;
+  }
+  
+  .start {
+    background-color: green;
+  }
+  
+  .end {
+    background-color: red;
+  }
+  
+  .visited {
+    background-color: yellow;
+  }
+  
+.table {
+    background-color: aquamarine;
+    font-size: 30px;
+  }
+
+.table th {
+    padding: 50px !important;
+}
+
+.cell {
+    width: 30px; /* Adjust size as needed */
+    height: 30px;
+    border: 1px solid #ddd;
+    display: inline-block;
+    position: relative;
+  }
+  
+  .start {
+    background-color: red;
+  }
+  
+  .end {
+    background-color: green;
+  }
+  
