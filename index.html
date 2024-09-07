@@ -1,38 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="uiStyle.css" type="text/css">
-    <link rel="stylesheet" href="gridStyle.css" type="text/css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Pathfinding Vizualizer</title>
+    <link rel="stylesheet" href="css/uiStyle.css" type="text/css">
+    <link rel="stylesheet" href="css/gridStyle.css" type="text/css">
 </head>
 <body>
+    <nav>
+      <input type="checkbox" id="sidebar-active">
+      <label for="sidebar-active" class="open-sidebar-button">
+        <svg xmlns="http://www.w3.org/2000/svg" height="32px" viewBox="0 -960 960 960" width="32px" fill="#e8eaed"><path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z"/></svg>
+      </label>
 
-    <button class="open-btn" onclick="openSidebar()">☰ Settings</button>
-    <div id="Title">
-        <h1>Pathfinding Visualizer</h1>
-    </div>
+      <label id="overlay" for="sidebar-active"></label>
+      <div class="links-container">
+        <label for="sidebar-active" class="close-sidebar-button">
+          <svg xmlns="http://www.w3.org/2000/svg" height="32px" viewBox="0 -960 960 960" width="32px" fill="#e8eaed"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg>
+        </label>
 
-   
-    <div id="sidebar">
-        <a href="#" class="close-btn" onclick="closeSidebar()">&times;</a>
-        <a href="#" class="dropdown-toggle">Algorithms ▼</a>
-        <div class="dropdown-content">
-          <a href="#">Dijkstra's Algorithm</a>
-          <a href="#">A* Algorithm</a>
-          <a href="#">Breadth-First Search</a>
+        <a class="home-link" href="#">Pathfinding Visualizer</a>
+
+        <div class="dropdown">
+          <a href="#" class="dropdown-toggle">Algorithms</a>
+          <div class="dropdown-content">
+            <a href="#">Dijkstra's Algorithm</a>
+            <a href="#">A* Algorithm</a>
+            <a href="#">Breadth-First Search</a>
+            <a href="#">Depth-First Search</a>
+          </div>
         </div>
-        <a href="#" class="dropdown-toggle">Mazes & Patterns ▼</a>
-        <div class="dropdown-content">
-          <a href="#">Maze Generation</a>
-          <a href="#">Pattern 1</a>
-          <a href="#">Pattern 2</a>
-        </div>
-    </div>
     
+        <!-- Dropdown for Mazes & Patterns -->
+        <div class="dropdown">
+          <a href="#" class="dropdown-toggle">Mazes & Patterns</a>
+          <div class="dropdown-content">
+            <a href="#">Recursive Division</a>
+            <a href="#">Random Maze</a>
+            <a href="#">Basic Pattern</a>
+          </div>
+        </div>
+      </div>
+    </nav>
 
     <div id="grid-container"></div>
+    <button id="start-button">Start Dijkstra</button>
+    <script src="js/gridScript.js" ></script>
+    <script type="module" src="js/algorithms.js"></script>
+    <script type="module" src="js/visualization.js"></script>
+    <script>
+      document.getElementById('start-button').addEventListener('click', () => {
+          runDijkstraAndAnimate();
+      });
 
-    <script src="gridScript.js" ></script>
-    <script src="uiScript.js"></script>
-        
+      document.querySelectorAll('.dropdown-toggle').forEach(item => {
+        item.addEventListener('click', function (e) {
+          e.preventDefault(); // Prevent the default anchor behavior
+
+          // Close any currently open dropdowns except the one clicked
+          document.querySelectorAll('.dropdown').forEach(dropdown => {
+            if (dropdown !== this.parentElement) {
+              dropdown.classList.remove('active');
+            }
+          });
+
+          // Toggle the clicked dropdown
+          const dropdown = this.parentElement;
+          dropdown.classList.toggle('active');
+        });
+      });
+
+      // Add event listener to close dropdown when clicking outside
+      document.addEventListener('click', function (event) {
+        const isClickInsideDropdown = event.target.closest('.dropdown');
+
+        // If click is outside any dropdown, close all dropdowns
+        if (!isClickInsideDropdown) {
+          document.querySelectorAll('.dropdown').forEach(dropdown => {
+            dropdown.classList.remove('active');
+          });
+        }
+      });
+
+
+    </script>   
 </body>
 </html>

@@ -1,8 +1,7 @@
 #grid-container {
     display: grid;
-    grid-template-columns: repeat(60, 25px); /* 20 columns, 40px each */
-    grid-template-rows: repeat(20, 25px);    /* 50 rows, 40px each */
-    gap: 2px; /* gap between cells */
+    grid-template-columns: repeat(60, 25.5px); /* 20 columns, 40px each */
+    grid-template-rows: repeat(20, 25.5px);    /* 50 rows, 40px each */
   }
   @keyframes growFromCenter {
     from {
@@ -13,10 +12,10 @@
       transform: scale(1);
       transform-origin: center;
     }
-  } 
-  .cell {
-    width: 27px;
-    height: 27px;
+  }
+.cell {
+    width: 25.5px;
+    height: 25.5px;
     border: 1px solid #ccc;
     background-color: white;
     position: relative;
@@ -33,4 +32,12 @@
 
 .end {
     background-color: red;
+}
+
+.visited {
+    background-color: lightblue; /* Color for visited nodes */
+}
+
+.path {
+    background-color: yellow; /* Color for the path */
 }
