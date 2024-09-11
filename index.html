@@ -14,7 +14,7 @@
   </head>
   <body class="vh-100 overflow-hidden">
 
-    <nav class="navbar navbar-expand-lg bg-transparent">
+    <nav class="navbar navbar-expand-lg bg-dark">
       <div class="container">
 
         <a class="navbar-brand" href="#">Pathfinding Visualizer</a>
@@ -26,7 +26,7 @@
         <div class="sidebar offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
           
           <div class="offcanvas-header text-white border-bottom">
-            <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Pathfinding Visualizer</h5>
+            <h5 class="offcanvas-title" id="offcanvasNavbarLabel text-white">Pathfinding Visualizer</h5>
             <button type="button" class="btn-close btn-close-white shadow-none" data-bs-dismiss="offcanvas" aria-label="Close"></button>
           </div>
 
@@ -34,36 +34,28 @@
             <ul class="navbar-nav justify-content-start align-items-start fs-5 flex-grow-1 pe-3">
 
               <li class="nav-item mx-2">
-                <a class="nav-link" href="#">Start</a>
+                <a class="nav-link text-white" href="#">Start</a>
               </li>
 
               <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   Algorithms
                 </a>
                 <ul class="dropdown-menu">
                   <li><a class="dropdown-item" href="#">Dijkstra's</a></li>
                   <li><a class="dropdown-item" href="#">A* Star</a></li>
-                  <li>
-                    <hr class="dropdown-divider">
-                  </li>
-                  <li><a class="dropdown-item" href="#">Something else here</a></li>
                 </ul>
               </li>
-
-              <li class="nav-item dropdown"></li>
-                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Patterns
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Maze & Patterns
                 </a>
-                <ul class="dropdown-menu">
+                <ul class="dropdown-menu dropdown-menu-end">
                   <li><a class="dropdown-item" href="#">Action</a></li>
                   <li><a class="dropdown-item" href="#">Another action</a></li>
-                  <li>
-                    <hr class="dropdown-divider">
-                  </li>
-                  <li><a class="dropdown-item" href="#">Something else here</a></li>
                 </ul>
               </li>
+              
 
             </ul>
 
