@@ -1,3 +1,16 @@
 .grid {
-  margin: 100px 0 0;
+  margin: 70px 0 0;
+  gap: 0;
+  border: 3px solid black;
+}
+
+body {
+
+}
+
+@media(max-width: 991px) {
+  .sidebar {
+    background-color: rgba(0, 0, 0, 0.434);
+    backdrop-filter: blur(10px);
+  }
 }
