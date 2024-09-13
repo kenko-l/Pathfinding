@@ -1,33 +1,68 @@
-const START_NODE_ROW = 10;
-const START_NODE_COL = 15;
-const FINISH_NODE_ROW = 10;
-const FINISH_NODE_COL = 35;
+let START_NODE_ROW = 10;
+let START_NODE_COL = 15;
+let FINISH_NODE_ROW = 10;
+let FINISH_NODE_COL = 35;
 let mouseIsPressed = false;
 let grid = [];
+let draggingStartNode = false;
+let draggingEndNode = false;
+let previousStartNode = { row: START_NODE_ROW, col: START_NODE_COL };
+let previousEndNode = { row: FINISH_NODE_ROW, col: FINISH_NODE_COL };
+
 
 window.onload = () => {
   grid = getInitialGrid();
   createGrid();
 };
 
-// Handle mouse down event to toggle walls
+// Handle mouse down event for dragging or wall placement
 function handleMouseDown(row, col) {
-  grid = getNewGridWithWallToggled(grid, row, col);
+  if (row === START_NODE_ROW && col === START_NODE_COL) {
+    draggingStartNode = true; // Start dragging the start node
+  } else if (row === FINISH_NODE_ROW && col === FINISH_NODE_COL) {
+    draggingEndNode = true; // Start dragging the end node
+  } else {
+    grid = getNewGridWithWallToggled(grid, row, col); // Toggle wall
+  }
   mouseIsPressed = true;
   updateGrid();
 }
 
-// Handle mouse enter event to toggle walls while the mouse is pressed
+// Handle mouse enter event for dragging or wall placement
 function handleMouseEnter(row, col) {
   if (!mouseIsPressed) return;
-  grid = getNewGridWithWallToggled(grid, row, col);
+
+  if (draggingStartNode) {
+    // Move the start node to the new location
+    grid[previousStartNode.row][previousStartNode.col].isStart = false;
+    grid[row][col].isStart = true;
+    previousStartNode = { row, col };
+    START_NODE_ROW = row;
+    START_NODE_COL = col;
+    updateGrid();
+  } else if (draggingEndNode) {
+    // Move the end node to the new location
+    grid[previousEndNode.row][previousEndNode.col].isFinish = false;
+    grid[row][col].isFinish = true;
+    previousEndNode = { row, col };
+    FINISH_NODE_ROW = row;
+    FINISH_NODE_COL = col;
+    updateGrid();
+  } else {
+    // Place walls if dragging elsewhere
+    grid = getNewGridWithWallToggled(grid, row, col);
+  }
   updateGrid();
 }
 
-// Handle mouse up event to stop toggling walls
+// Handle mouse up event to stop dragging or wall placement
 function handleMouseUp() {
   mouseIsPressed = false;
+  draggingStartNode = false;
+  draggingEndNode = false;
+  updateGrid();
 }
+
 
 // Animate Dijkstra's algorithm traversal
 function animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder) {
@@ -73,23 +108,30 @@ function visualizeDijkstra() {
 // Generate the grid dynamically in HTML
 function createGrid() {
   const gridElement = document.querySelector('.grid');
-  gridElement.innerHTML = '';
+  gridElement.innerHTML = ''; // Clear the existing grid content
+
   for (let row = 0; row < grid.length; row++) {
     const rowElement = document.createElement('div');
     rowElement.className = 'row';
+
     for (let col = 0; col < grid[row].length; col++) {
       const node = grid[row][col];
       const nodeElement = document.createElement('div');
       nodeElement.id = `node-${row}-${col}`;
       nodeElement.className = getNodeClassName(node);
+
+      // Add event listeners for mousedown, mouseenter, and mouseup
       nodeElement.addEventListener('mousedown', () => handleMouseDown(row, col));
       nodeElement.addEventListener('mouseenter', () => handleMouseEnter(row, col));
-      nodeElement.addEventListener('mouseup', handleMouseUp);
+      nodeElement.addEventListener('mouseup', handleMouseUp); // Ensure mouseup listener is added to each node
+
       rowElement.appendChild(nodeElement);
     }
+
     gridElement.appendChild(rowElement);
   }
 }
+
 
 // Update the grid dynamically after changes (like wall toggling)
 function updateGrid() {
@@ -107,7 +149,7 @@ function getInitialGrid() {
   const grid = [];
   for (let row = 0; row < 20; row++) {
     const currentRow = [];
-    for (let col = 0; col < 50; col++) {
+    for (let col = 0; col <60; col++) {
       currentRow.push(createNode(col, row));
     }
     grid.push(currentRow);
@@ -126,6 +168,9 @@ function createNode(col, row) {
     isVisited: false,
     isWall: false,
     previousNode: null,
+    weight: 1,
+    isWeighted: false,
+    mouseIsPressed: false,
   };
 }
 
@@ -149,5 +194,6 @@ function getNodeClassName(node) {
   return 'node';
 }
 
-// Add event listener to visualize button
+// Add event listeners
 document.getElementById('start-button').addEventListener('click', visualizeDijkstra);
+document.addEventListener('mouseup', handleMouseUp);
