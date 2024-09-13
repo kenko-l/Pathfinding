@@ -13,7 +13,34 @@ let previousEndNode = { row: FINISH_NODE_ROW, col: FINISH_NODE_COL };
 window.onload = () => {
   grid = getInitialGrid();
   createGrid();
+
+  // Get button elements
+  const startButton = document.getElementById('start-button');
+  const clearButton = document.getElementById('clear-button');
+
+  // Add event listeners
+  startButton.addEventListener('click', () => {
+    disableButtons();
+    visualizeDijkstra().then(() => {
+      enableButtons();
+    });
+  });
+  
+  clearButton.addEventListener('click', clearGrid);
+  document.addEventListener('mouseup', handleMouseUp);
 };
+
+// Function to disable buttons
+function disableButtons() {
+  document.getElementById('start-button').disabled = true;
+  document.getElementById('clear-button').disabled = true;
+}
+
+// Function to enable buttons
+function enableButtons() {
+  document.getElementById('start-button').disabled = false;
+  document.getElementById('clear-button').disabled = false;
+}
 
 // Handle mouse down event for dragging or wall placement
 function handleMouseDown(row, col) {
@@ -51,15 +78,19 @@ function handleMouseEnter(row, col) {
   } else {
     // Place walls if dragging elsewhere
     grid = getNewGridWithWallToggled(grid, row, col);
+    updateGrid();
   }
-  updateGrid();
+  
 }
 
 // Handle mouse up event to stop dragging or wall placement
 function handleMouseUp() {
+  if (draggingStartNode || draggingEndNode) {
+    // Ensure we don't leave dragging state active
+    draggingStartNode = false;
+    draggingEndNode = false;
+  }
   mouseIsPressed = false;
-  draggingStartNode = false;
-  draggingEndNode = false;
   updateGrid();
 }
 
@@ -85,24 +116,40 @@ function animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder) {
 
 // Animate the shortest path found by Dijkstra's algorithm
 function animateShortestPath(nodesInShortestPathOrder) {
-  for (let i = 0; i < nodesInShortestPathOrder.length; i++) {
-    setTimeout(() => {
-      const node = nodesInShortestPathOrder[i];
-      const element = document.getElementById(`node-${node.row}-${node.col}`);
-      if (element) {
-        element.className = 'node node-shortest-path';
-      }
-    }, 50 * i);
-  }
+  const animateNode = (index) => {
+    if (index >= nodesInShortestPathOrder.length) return;
+
+    const node = nodesInShortestPathOrder[index];
+    const element = document.getElementById(`node-${node.row}-${node.col}`);
+    if (element) {
+      element.className = 'node node-shortest-path';
+    }
+
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        animateNode(index + 1);
+      }, 1); // Adjust delay as needed
+    });
+  };
+
+  animateNode(0);
 }
 
+
 // Visualize Dijkstra's algorithm by animating the process
-function visualizeDijkstra() {
+async function visualizeDijkstra() {
+  disableGrid();
+
   const startNode = grid[START_NODE_ROW][START_NODE_COL];
   const finishNode = grid[FINISH_NODE_ROW][FINISH_NODE_COL];
   const visitedNodesInOrder = dijkstra(grid, startNode, finishNode);
   const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
-  animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder);
+  // Animate Dijkstra's algorithm traversal
+  await new Promise(resolve => {
+    animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder);
+    resolve();
+  });
+
 }
 
 // Generate the grid dynamically in HTML
@@ -147,7 +194,7 @@ function updateGrid() {
 // Get the initial grid layout
 function getInitialGrid() {
   const grid = [];
-  for (let row = 0; row < 20; row++) {
+  for (let row = 0; row < 24; row++) {
     const currentRow = [];
     for (let col = 0; col <60; col++) {
       currentRow.push(createNode(col, row));
@@ -194,6 +241,45 @@ function getNodeClassName(node) {
   return 'node';
 }
 
-// Add event listeners
-document.getElementById('start-button').addEventListener('click', visualizeDijkstra);
-document.addEventListener('mouseup', handleMouseUp);
+// Function to reset the grid to its original state
+function clearGrid() {
+  // Reset grid state to its initial values
+  grid = getInitialGrid();
+  
+  // Clear any pathfinding visualizations
+  updateGrid();
+  
+  // Ensure no node is being dragged
+  draggingStartNode = false;
+  draggingEndNode = false;
+  
+  
+  START_NODE_ROW = 10;
+  START_NODE_COL = 15;
+  FINISH_NODE_ROW = 10;
+  FINISH_NODE_COL = 35;
+  
+  previousStartNode = { row: START_NODE_ROW, col: START_NODE_COL };
+  previousEndNode = { row: FINISH_NODE_ROW, col: FINISH_NODE_COL };
+  
+  enableGrid(); 
+
+  // Force reflow to ensure the icons reset properly
+  const gridElement = document.querySelector('.grid');
+  gridElement.style.display = 'none'; // Temporarily hide
+  void gridElement.offsetHeight; // Trigger reflow
+  gridElement.style.display = ''; // Show again
+}
+
+
+// Function to disable the grid
+function disableGrid() {
+  const gridElement = document.querySelector('.grid');
+  gridElement.classList.add('grid-disabled');
+}
+
+// Function to enable the grid
+function enableGrid() {
+  const gridElement = document.querySelector('.grid');
+  gridElement.classList.remove('grid-disabled');
+}

@@ -4,7 +4,7 @@ function createNodeElement(row, col, isFinish, isStart, isWall, onMouseDown, onM
     const nodeElement = document.createElement('div');
   
     // Assign an ID to the node based on its row and column
-    nodeElement.id = node-${row}-${col};
+    nodeElement.id = 'node-${row}-${col}';
   
     // Determine the extra class name based on the node's status (start, finish, wall)
     let extraClassName = '';
@@ -17,7 +17,7 @@ function createNodeElement(row, col, isFinish, isStart, isWall, onMouseDown, onM
     }
   
     // Assign class names to the node element
-    nodeElement.className = node ${extraClassName};
+    nodeElement.className = 'node ${extraClassName}';
   
     // Add event listeners for mouse events
     nodeElement.addEventListener('mousedown', () => onMouseDown(row, col));

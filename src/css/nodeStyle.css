@@ -1,4 +1,7 @@
+.grid-container {
+  background-color: black;
 
+}
 .node {
   width: 25px;
   height: 25px;
@@ -7,16 +10,22 @@
 }
 
 .node-finish {
-  background-color: red;
+  background-image: url(../icons/finish.png);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .node-start {
-  background-color: green;
+  background-image: url(../icons/flag.png);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .node-visited {
   animation-name: visitedAnimation;
-  animation-duration: 1s;
+  animation-duration: 0.5s;
   animation-timing-function: ease-in;
   animation-delay: 0;
   animation-direction: alternate;
@@ -71,7 +80,7 @@
 
 .node-shortest-path {
   animation-name: shortestPath;
-  animation-duration: 0.4s;
+  animation-duration: 0.9s;
   animation-timing-function: ease-out;
   animation-delay: 0;
   animation-direction: alternate;

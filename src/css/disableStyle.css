@@ -1,0 +1,4 @@
+/* Disable all pointer events */
+.grid-disabled {
+    pointer-events: none;
+  }
