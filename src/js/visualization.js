@@ -8,7 +8,7 @@ let draggingStartNode = false;
 let draggingEndNode = false;
 let previousStartNode = { row: START_NODE_ROW, col: START_NODE_COL };
 let previousEndNode = { row: FINISH_NODE_ROW, col: FINISH_NODE_COL };
-
+let addWeightMode = false;
 
 window.onload = () => {
   grid = getInitialGrid();
@@ -17,6 +17,7 @@ window.onload = () => {
   // Get button elements
   const startButton = document.getElementById('start-button');
   const clearButton = document.getElementById('clear-button');
+  const weightButton = document.getElementById('medium-weight-button');
 
   // Add event listeners
   startButton.addEventListener('click', () => {
@@ -27,6 +28,13 @@ window.onload = () => {
   });
   
   clearButton.addEventListener('click', clearGrid);
+
+  // Toggle weight mode
+  weightButton.addEventListener('click', () => {
+    addWeightMode = !addWeightMode; // Toggle weight mode
+    weightButton.classList.toggle('active', addWeightMode); // Optional: Add active class for visual feedback
+  });
+
   document.addEventListener('mouseup', handleMouseUp);
 };
 
@@ -42,6 +50,7 @@ function enableButtons() {
   document.getElementById('clear-button').disabled = false;
 }
 
+/*
 // Handle mouse down event for dragging or wall placement
 function handleMouseDown(row, col) {
   if (row === START_NODE_ROW && col === START_NODE_COL) {
@@ -52,6 +61,7 @@ function handleMouseDown(row, col) {
     grid = getNewGridWithWallToggled(grid, row, col); // Toggle wall
   }
   mouseIsPressed = true;
+  handleCellClick(row, col);
   updateGrid();
 }
 
@@ -78,10 +88,12 @@ function handleMouseEnter(row, col) {
   } else {
     // Place walls if dragging elsewhere
     grid = getNewGridWithWallToggled(grid, row, col);
+    handleCellClick(row, col);
     updateGrid();
   }
   
 }
+*/
 
 // Handle mouse up event to stop dragging or wall placement
 function handleMouseUp() {
@@ -93,7 +105,82 @@ function handleMouseUp() {
   mouseIsPressed = false;
   updateGrid();
 }
+/*
+// Handle mouse down event for dragging or wall/weight placement
+function handleMouseDown(row, col) {
+  mouseIsPressed = true;
+  handleCellClick(row, col); // Use handleCellClick for all interactions
+  updateGrid();
+}
 
+// Handle mouse enter event for dragging or wall/weight placement
+function handleMouseEnter(row, col) {
+  if (!mouseIsPressed) return;
+
+  handleCellClick(row, col); // Use handleCellClick for all interactions
+  updateGrid();
+}*/
+
+function handleMouseDown(row, col) {
+  mouseIsPressed = true;
+
+  if (row === START_NODE_ROW && col === START_NODE_COL) {
+    draggingStartNode = true;
+  } else if (row === FINISH_NODE_ROW && col === FINISH_NODE_COL) {
+    draggingEndNode = true;
+  } else {
+    handleCellClick(row, col); // Handle wall/weight placement or removal
+    updateGrid();
+  }
+}
+function handleMouseEnter(row, col) {
+  if (!mouseIsPressed) return;
+
+  if (draggingStartNode) {
+    // Move the start node to the new location
+    grid[previousStartNode.row][previousStartNode.col].isStart = false;
+    grid[row][col].isStart = true;
+    previousStartNode = { row, col };
+    START_NODE_ROW = row;
+    START_NODE_COL = col;
+    updateGrid();
+  } else if (draggingEndNode) {
+    // Move the end node to the new location
+    grid[previousEndNode.row][previousEndNode.col].isFinish = false;
+    grid[row][col].isFinish = true;
+    previousEndNode = { row, col };
+    FINISH_NODE_ROW = row;
+    FINISH_NODE_COL = col;
+    updateGrid();
+  } else {
+    handleCellClick(row, col); // Handle wall/weight placement or removal
+    updateGrid();
+  }
+}
+
+// Main function to handle cell interactions (walls, weights, dragging start/end nodes)
+function handleCellClick(row, col) {
+  const cell = grid[row][col];
+
+  if (row === START_NODE_ROW && col === START_NODE_COL) {
+    draggingStartNode = true; // Start dragging the start node
+  } else if (row === FINISH_NODE_ROW && col === FINISH_NODE_COL) {
+    draggingEndNode = true; // Start dragging the end node
+  } else if (addWeightMode && !cell.isWall && !cell.isStart && !cell.isFinish) {
+    // Toggle weight: If already weighted, remove it. If not, add weight.
+    if (cell.isWeighted) {
+      grid[row][col].isWeighted = false;
+      grid[row][col].weight = 1; // Reset weight to default value
+    } else {
+      grid[row][col].isWeighted = true;
+      grid[row][col].weight = 5; // Set weight (customize as needed)
+    }
+    updateGrid();
+  } else {
+    // Toggle wall state
+    grid = getNewGridWithWallToggled(grid, row, col);
+  }
+}
 
 // Animate Dijkstra's algorithm traversal
 function animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder) {
@@ -238,6 +325,7 @@ function getNodeClassName(node) {
   if (node.isStart) return 'node node-start';
   if (node.isFinish) return 'node node-finish';
   if (node.isWall) return 'node node-wall';
+  if (node.isWeighted) return 'node node-weighted';
   return 'node';
 }
 
@@ -258,11 +346,23 @@ function clearGrid() {
   START_NODE_COL = 15;
   FINISH_NODE_ROW = 10;
   FINISH_NODE_COL = 35;
-  
+
   previousStartNode = { row: START_NODE_ROW, col: START_NODE_COL };
   previousEndNode = { row: FINISH_NODE_ROW, col: FINISH_NODE_COL };
   
   enableGrid(); 
+
+  // Reset weights and walls in all nodes
+  for (let row = 0; row < grid.length; row++) {
+    for (let col = 0; col < grid[row].length; col++) {
+      const node = grid[row][col];
+      node.isWeighted = false; // Reset weights
+      node.weight = 1; // Reset weight to default value
+      node.isWall = false; // Reset walls
+      node.isVisited = false; // Reset visited status
+      node.previousNode = null; // Clear previous path
+    }
+  }
 
   // Force reflow to ensure the icons reset properly
   const gridElement = document.querySelector('.grid');

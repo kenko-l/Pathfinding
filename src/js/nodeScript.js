@@ -28,3 +28,4 @@ function createNodeElement(row, col, isFinish, isStart, isWall, onMouseDown, onM
     return nodeElement;
   }
   
+  
