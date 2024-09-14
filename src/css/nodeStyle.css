@@ -62,6 +62,7 @@
   animation-duration: 0.2s;
   animation-timing-function: ease-in-out;
   animation-fill-mode: forwards;
+  background-color: black;
 }
 
 @keyframes wallAnimation {
@@ -113,6 +114,15 @@
   }
 }
 
-.node-weighted {
-  background-color: orange;
+
+.node-weighted[data-weight="3"] {
+  background-color: rgb(218, 247, 166); /* Light weight */
+}
+
+.node-weighted[data-weight="5"] {
+  background-color: rgb(255, 195, 0); /* Medium weight */
+}
+
+.node-weighted[data-weight="10"] {
+  background-color: rgb(255, 87, 51); /* Heavy weight */
 }

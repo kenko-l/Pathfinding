@@ -4,7 +4,6 @@
   margin-right: 15px;
   border: 3px solid rgb(73, 231, 158);
   background-color: rgb(255, 245, 238);
-  
 }
 
 @media(max-width: 991px) {
@@ -29,6 +28,17 @@
   background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='white' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
 }
 
+#wall-button {
+  background-color: rgb(133, 133, 133);
+  color: white;
+  border: 2px solid rgb(0, 0, 0);
+  border-radius: 5px;
+  padding-inline: 12px;
+  padding-block: 0px;
+  margin-top: 7px;
+  margin-inline: 7px;
+}
+
 #start-button {
   background-color: green;
   color: white;
@@ -37,6 +47,7 @@
   padding-inline: 12px;
   padding-block: 0px;
   margin-top: 7px;
+  margin-right: 10px;
 }
 
 #clear-button {
@@ -51,10 +62,10 @@
 
 #light-weight-button {
   background-color: rgb(218, 247, 166);
-  color: white;
+  color: rgb(0, 0, 0);
   border: none;
   border-radius: 0;
-  padding: 0.375rem 0.75rem;
+  
   font-size: 1rem;
   text-align: center;
 }
@@ -66,10 +77,10 @@
 
 #medium-weight-button {
   background-color: rgb(255, 195, 0);
-  color: white;
+  color: rgb(0, 0, 0);
   border: none;
   border-radius: 0;
-  padding: 0.375rem 0.75rem;
+  
   font-size: 1rem;
   text-align: center;
 }
@@ -81,10 +92,10 @@
 
 #heavy-weight-button {
   background-color: rgb(255, 87, 51);
-  color: white;
+  color: rgb(0, 0, 0);
   border: none;
   border-radius: 0;
-  padding: 0.375rem 0.75rem;
+  
   font-size: 1rem;
   text-align: center;
 }
