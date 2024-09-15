@@ -37,8 +37,8 @@
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Algorithms</a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">Breadth-first Search</a></li>
-                    <li><a class="dropdown-item" href="#">A* Star</a></li>
+                    <li><a class="dropdown-item" href="#dijkstra">Dijkstra's</a></li>
+                    <li><a class="dropdown-item" href="#astar">A* Star</a></li>
                   </ul>
               </li>
 
@@ -65,7 +65,6 @@
               <button class="nav-link text-white" id="start-button">Start</button>
               <button class="nav-link text-white" id="clear-button">Clear</button>
 
-
             </ul>
           </div>
         </div>
@@ -80,13 +79,8 @@
       <div id="weight-icon" draggable="true" class="weight-icon"></div>
 
       <script src="src/js/nodeScript.js"></script>
-      <script src="src/js/visualization.js"></script>
-      <script src="src/js/dijkstra.js"></script>
-<!--
-      <script src="js/config.js"></script>
-      <script src="js/events.js"></script>
-      <script src="js/pathfinding.js"></script>
-      <script src="js/button.js"></script>-->
+      <script type="module" src="src/js/visualization.js"></script>
+      <script type="module" src="src/Algorithms/aStar.js"></script>
     
     </main>
   </body>

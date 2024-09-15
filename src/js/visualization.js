@@ -1,10 +1,13 @@
-let START_NODE_ROW = 10;
-let START_NODE_COL = 15;
-let FINISH_NODE_ROW = 10;
-let FINISH_NODE_COL = 35;
+import { visualizeDijkstra } from '../Algorithms/dijkstra.js';
+import { visualizeAStar } from '../Algorithms/aStar.js';
+
+export let START_NODE_ROW = 10;
+export let START_NODE_COL = 15;
+export let FINISH_NODE_ROW = 10;
+export let FINISH_NODE_COL = 35;
 
 let mouseIsPressed = false;
-let grid = [];
+export let grid = [];
 let draggingStartNode = false;
 let draggingEndNode = false;
 let previousStartNode = { row: START_NODE_ROW, col: START_NODE_COL };
@@ -12,6 +15,7 @@ let previousEndNode = { row: FINISH_NODE_ROW, col: FINISH_NODE_COL };
 let addWeightMode = false;
 let weightValue = 5;
 let wallMode = false; 
+let selectedAlgorithm = 'dijkstra';
 
 window.onload = () => {
   grid = getInitialGrid();
@@ -21,19 +25,32 @@ window.onload = () => {
   const startButton = document.getElementById('start-button');
   const clearButton = document.getElementById('clear-button');
   const wallButton = document.getElementById('wall-button');
+  const aStarButton = document.getElementById('a-star-button');
   const weightButtons = {
     light: document.getElementById('light-weight-button'),
     medium: document.getElementById('medium-weight-button'),
     heavy: document.getElementById('heavy-weight-button')
   };
- 
 
-  // Add event listeners
+  // Set up event listeners for algorithm selection
+  const dijkstraMenuItem = document.querySelector('.dropdown-menu a[href="#dijkstra"]');
+  const aStarMenuItem = document.querySelector('.dropdown-menu a[href="#astar"]');
+
+  dijkstraMenuItem.addEventListener('click', () => {
+    selectedAlgorithm = 'dijkstra';
+  });
+
+  aStarMenuItem.addEventListener('click', () => {
+    selectedAlgorithm = 'astar';
+  });
+
+  // Set up event listener for the start button
   startButton.addEventListener('click', () => {
-    disableButtons();
-    visualizeDijkstra().then(() => {
-      enableButtons();
-    });
+    if (selectedAlgorithm === 'dijkstra') {
+      visualizeDijkstra();
+    } else if (selectedAlgorithm === 'astar') {
+      visualizeAStar();
+    }
   });
 
   clearButton.addEventListener('click', clearGrid);
@@ -218,7 +235,7 @@ function clearGrid() {
 }
 
 // Function to disable the grid
-function disableGrid() {
+export function disableGrid() {
   const gridElement = document.querySelector('.grid');
   gridElement.classList.add('grid-disabled');
 }
@@ -304,23 +321,6 @@ function getWeightButtonId(value) {
   if (value === 3) return 'light-weight-button';
   if (value === 5) return 'medium-weight-button';
   if (value === 10) return 'heavy-weight-button';
-}
-
-// Visualize Dijkstra's algorithm by animating the process
-// Responsible for the entire Dijkstra's algorithm visualization flow.
-async function visualizeDijkstra() {
-  disableGrid();
-
-  const startNode = grid[START_NODE_ROW][START_NODE_COL];
-  const finishNode = grid[FINISH_NODE_ROW][FINISH_NODE_COL];
-  const visitedNodesInOrder = dijkstra(grid, startNode, finishNode);
-  const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
-  // Animate Dijkstra's algorithm traversal
-  await new Promise(resolve => {
-    animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder);
-    resolve();
-  });
-
 }
 
 // Handles the step-by-step animation of the algorithm.
