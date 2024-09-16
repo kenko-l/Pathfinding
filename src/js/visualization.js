@@ -16,9 +16,13 @@ let addWeightMode = false;
 let weightValue = 5;
 let wallMode = false; 
 let selectedAlgorithm = 'dijkstra';
+let cellSize = 25; // Size of each cell in pixels
+let gridWidth = 60; // Default grid columns
+let gridHeight = 24; // Default grid rows
 
 window.onload = () => {
   grid = getInitialGrid();
+  adjustGridToScreenSize();
   createGrid();
 
   // Get button elements
@@ -32,7 +36,7 @@ window.onload = () => {
     heavy: document.getElementById('heavy-weight-button')
   };
 
-  // Set up event listeners for algorithm selection
+  // Event listeners for algorithm selection
   const dijkstraMenuItem = document.querySelector('.dropdown-menu a[href="#dijkstra"]');
   const aStarMenuItem = document.querySelector('.dropdown-menu a[href="#astar"]');
 
@@ -69,6 +73,12 @@ window.onload = () => {
     addWeightMode = false; // Disable weight mode
     wallMode = !wallMode; // Toggle wall mode
     wallButton.classList.toggle('active', wallMode); // Optional: Add active class for visual feedback
+  });
+
+  // Attach resize event listener to adjust grid when the window is resized
+  window.addEventListener('resize', () => {
+    adjustGridToScreenSize();
+    createGrid(); // Recreate the grid on screen size change
   });
 
   document.addEventListener('mouseup', handleMouseUp);
@@ -249,15 +259,31 @@ function enableGrid() {
 // Get the initial grid layout
 function getInitialGrid() {
   const grid = [];
-  for (let row = 0; row < 24; row++) {
+  for (let row = 0; row < gridHeight; row++) {
     const currentRow = [];
-    for (let col = 0; col <60; col++) {
+    for (let col = 0; col < gridWidth; col++) {
       currentRow.push(createNode(col, row));
     }
     grid.push(currentRow);
   }
   return grid;
 }
+
+// Function to calculate number of rows and columns based on the screen size
+function adjustGridToScreenSize() {
+  const screenWidth = window.innerWidth;
+  const screenHeight = window.innerHeight;
+
+  // Dynamically calculate columns based on the available width
+  gridWidth = Math.floor(screenWidth / cellSize);
+  
+  // Dynamically calculate rows based on the available height
+  gridHeight = Math.floor((screenHeight * 0.8) / cellSize); // 80% of the height for the grid
+
+  // Update the grid to the new size
+  grid = getInitialGrid();
+}
+
 
 // Create a node with specific properties
 function createNode(col, row) {
@@ -323,44 +349,6 @@ function getWeightButtonId(value) {
   if (value === 10) return 'heavy-weight-button';
 }
 
-// Handles the step-by-step animation of the algorithm.
-function animateDijkstra(visitedNodesInOrder, nodesInShortestPathOrder) {
-  for (let i = 0; i <= visitedNodesInOrder.length; i++) {
-    if (i === visitedNodesInOrder.length) {
-      setTimeout(() => {
-        animateShortestPath(nodesInShortestPathOrder);
-      }, 10 * i);
-      return;
-    }
-    setTimeout(() => {
-      const node = visitedNodesInOrder[i];
-      const element = document.getElementById(`node-${node.row}-${node.col}`);
-      if (element) {
-        element.className = 'node node-visited';
-      }
-    }, 10 * i);
-  }
-}
 
-// Animate the shortest path found by Dijkstra's algorithm
-function animateShortestPath(nodesInShortestPathOrder) {
-  const animateNode = (index) => {
-    if (index >= nodesInShortestPathOrder.length) return;
-
-    const node = nodesInShortestPathOrder[index];
-    const element = document.getElementById(`node-${node.row}-${node.col}`);
-    if (element) {
-      element.className = 'node node-shortest-path';
-    }
-
-    requestAnimationFrame(() => {
-      setTimeout(() => {
-        animateNode(index + 1);
-      }, 1); // Adjust delay as needed
-    });
-  };
-
-  animateNode(0);
-}
 
 
