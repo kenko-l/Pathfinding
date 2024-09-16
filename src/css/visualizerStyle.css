@@ -8,6 +8,7 @@
   margin-right: 15px;*/
   border: 3px solid rgb(73, 231, 158);
   background-color: rgb(255, 245, 238);
+  position: relative;
 }
 
 @media(max-width: 991px) {

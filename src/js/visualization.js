@@ -4,7 +4,7 @@ import { visualizeAStar } from '../Algorithms/aStar.js';
 export let START_NODE_ROW = 10;
 export let START_NODE_COL = 15;
 export let FINISH_NODE_ROW = 10;
-export let FINISH_NODE_COL = 35;
+export let FINISH_NODE_COL = 45;
 
 let mouseIsPressed = false;
 export let grid = [];
@@ -17,8 +17,8 @@ let weightValue = 5;
 let wallMode = false; 
 let selectedAlgorithm = 'dijkstra';
 let cellSize = 25; // Size of each cell in pixels
-let gridWidth = 60; // Default grid columns
-let gridHeight = 24; // Default grid rows
+export let gridWidth = 60; // Default grid columns
+export let gridHeight = 24; // Default grid rows
 
 window.onload = () => {
   grid = getInitialGrid();
@@ -29,12 +29,21 @@ window.onload = () => {
   const startButton = document.getElementById('start-button');
   const clearButton = document.getElementById('clear-button');
   const wallButton = document.getElementById('wall-button');
-  const aStarButton = document.getElementById('a-star-button');
   const weightButtons = {
     light: document.getElementById('light-weight-button'),
     medium: document.getElementById('medium-weight-button'),
     heavy: document.getElementById('heavy-weight-button')
   };
+
+  const randomWallButton = document.getElementById('random-wall-button');
+  if (randomWallButton) {
+    randomWallButton.addEventListener('click', () => {
+      placeRandomWalls(0.2);
+    });
+  } else {
+    console.error('Random wall button not found.');
+  }
+  
 
   // Event listeners for algorithm selection
   const dijkstraMenuItem = document.querySelector('.dropdown-menu a[href="#dijkstra"]');
@@ -83,6 +92,24 @@ window.onload = () => {
 
   document.addEventListener('mouseup', handleMouseUp);
 };
+
+function placeRandomWalls(density = 0.2) {
+  if (density < 0 || density > 1) {
+    console.error('Density must be between 0 and 1.');
+    return;
+  }
+
+  for (let row = 0; row < gridHeight; row++) {
+    for (let col = 0; col < gridWidth; col++) {
+      if (Math.random() < density) {
+        grid[row][col].isWall = true;
+        console.log(`Wall placed at (${row}, ${col})`); // Debug log
+      }
+    }
+  }
+
+  updateGrid();
+}
 
 // Handle mouse up event to stop dragging or wall placement
 function handleMouseUp() {
@@ -187,7 +214,7 @@ function createGrid() {
 } 
 
 // Update the grid dynamically after changes (like wall toggling)
-function updateGrid() {
+export function updateGrid() {
   for (let row = 0; row < grid.length; row++) {
     for (let col = 0; col < grid[row].length; col++) {
       const node = grid[row][col];
@@ -204,6 +231,7 @@ function updateGrid() {
 
 // Function to reset the grid to its original state
 function clearGrid() {
+  
   // Reset grid state to its initial values
   grid = getInitialGrid();
   
@@ -218,7 +246,7 @@ function clearGrid() {
   START_NODE_ROW = 10;
   START_NODE_COL = 15;
   FINISH_NODE_ROW = 10;
-  FINISH_NODE_COL = 35;
+  FINISH_NODE_COL = 45;
 
   previousStartNode = { row: START_NODE_ROW, col: START_NODE_COL };
   previousEndNode = { row: FINISH_NODE_ROW, col: FINISH_NODE_COL };
@@ -256,9 +284,10 @@ function enableGrid() {
   gridElement.classList.remove('grid-disabled');
 }
 
-// Get the initial grid layout
 function getInitialGrid() {
   const grid = [];
+  
+  // Create the grid with nodes
   for (let row = 0; row < gridHeight; row++) {
     const currentRow = [];
     for (let col = 0; col < gridWidth; col++) {
@@ -280,10 +309,78 @@ function adjustGridToScreenSize() {
   // Dynamically calculate rows based on the available height
   gridHeight = Math.floor((screenHeight * 0.8) / cellSize); // 80% of the height for the grid
 
-  // Update the grid to the new size
+  // Ensure the new grid dimensions are valid
+  if (gridWidth < 2 || gridHeight < 2) return; // At least 2x2 grid is needed
+
+  // Generate a new grid
   grid = getInitialGrid();
+
+  // Randomly place start and end nodes
+  placeStartAndEndNodesRandomly();
+
+  // Create the grid
+  createGrid();
+
 }
 
+function placeStartAndEndNodesRandomly() {
+  // Ensure the grid has been initialized and has valid dimensions
+  if (!grid || grid.length === 0 || grid[0].length === 0) {
+    console.error('Grid is not properly initialized.');
+    return;
+  }
+
+  // Variables to store new positions
+  let newStartRow, newStartCol, newEndRow, newEndCol;
+
+  // Generate random positions for the start node
+  do {
+    newStartRow = Math.floor(Math.random() * gridHeight);
+    newStartCol = Math.floor(Math.random() * gridWidth);
+  } while (newStartRow === FINISH_NODE_ROW && newStartCol === FINISH_NODE_COL);
+
+  // Generate random positions for the end node
+  do {
+    newEndRow = Math.floor(Math.random() * gridHeight);
+    newEndCol = Math.floor(Math.random() * gridWidth);
+  } while (newEndRow === newStartRow && newEndCol === newStartCol);
+
+  // Ensure the positions are within the grid bounds
+  if (
+    newStartRow >= gridHeight || newStartRow < 0 || 
+    newStartCol >= gridWidth || newStartCol < 0 ||
+    newEndRow >= gridHeight || newEndRow < 0 || 
+    newEndCol >= gridWidth || newEndCol < 0
+  ) {
+    console.error('Random positions are out of bounds.');
+    return;
+  }
+
+  // Clear previous start and end node positions
+  if (grid[START_NODE_ROW] && grid[START_NODE_ROW][START_NODE_COL]) {
+    grid[START_NODE_ROW][START_NODE_COL].isStart = false;
+  }
+  if (grid[FINISH_NODE_ROW] && grid[FINISH_NODE_ROW][FINISH_NODE_COL]) {
+    grid[FINISH_NODE_ROW][FINISH_NODE_COL].isFinish = false;
+  }
+
+  // Update the grid with new start and end positions
+  if (grid[newStartRow] && grid[newStartRow][newStartCol]) {
+    grid[newStartRow][newStartCol].isStart = true;
+  }
+  if (grid[newEndRow] && grid[newEndRow][newEndCol]) {
+    grid[newEndRow][newEndCol].isFinish = true;
+  }
+
+  // Update global variables for start and end nodes
+  START_NODE_ROW = newStartRow;
+  START_NODE_COL = newStartCol;
+  FINISH_NODE_ROW = newEndRow;
+  FINISH_NODE_COL = newEndCol;
+
+  previousStartNode = { row: START_NODE_ROW, col: START_NODE_COL };
+  previousEndNode = { row: FINISH_NODE_ROW, col: FINISH_NODE_COL };
+}
 
 // Create a node with specific properties
 function createNode(col, row) {
@@ -335,12 +432,59 @@ function enableButtons() {
   document.getElementById('clear-button').disabled = false;
 }
 
-// Function to update button states (optional visual feedback)
-function updateWeightButtonStates() {
-  const buttons = document.querySelectorAll('#light-weight-button, #medium-weight-button, #heavy-weight-button');
-  buttons.forEach(button => button.classList.remove('active'));
-  document.querySelector(`#${getWeightButtonId(weightValue)}`).classList.add('active');
+function disableInteraction() {
+  const overlay = document.createElement('div');
+  overlay.id = 'interaction-blocker';
+  overlay.style.position = 'fixed';
+  overlay.style.top = '0';
+  overlay.style.left = '0';
+  overlay.style.width = '100%';
+  overlay.style.height = '100%';
+  overlay.style.zIndex = '1000';  // Make sure it's on top of everything
+  document.body.appendChild(overlay);
 }
+
+function enableInteraction() {
+  const overlay = document.getElementById('interaction-blocker');
+  if (overlay) {
+    overlay.remove();
+  }
+}
+
+startButton.addEventListener('click', async () => {
+  disableInteraction();
+  disableButtons();
+  
+  if (selectedAlgorithm === 'dijkstra') {
+    await visualizeDijkstra();
+  } else if (selectedAlgorithm === 'astar') {
+    await visualizeAStar();
+  }
+  
+  enableButtons();
+  enableInteraction();
+});
+
+let isAlgorithmRunning = false;
+
+startButton.addEventListener('click', async () => {
+  if (isAlgorithmRunning) return;  // Prevent starting another run
+
+  isAlgorithmRunning = true;  // Set the flag to indicate algorithm is running
+  disableButtons();
+  disableInteraction();
+
+  if (selectedAlgorithm === 'dijkstra') {
+    await visualizeDijkstra();
+  } else if (selectedAlgorithm === 'astar') {
+    await visualizeAStar();
+  }
+
+  enableButtons();
+  enableInteraction();
+  isAlgorithmRunning = false;  // Reset the flag after completion
+});
+
 
 // Get button ID based on weight value
 function getWeightButtonId(value) {

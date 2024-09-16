@@ -37,6 +37,8 @@
   animation-play-state: running;
   position: relative;
   z-index: 5;
+  transform-origin: center center; 
+  will-change: transform;
 }
 
 @keyframes visitedAnimation {
@@ -95,6 +97,8 @@
   animation-play-state: running;
   position: relative;
   z-index: 5;
+  transform-origin: center center;
+  will-change: transform;
 }
 
 @keyframes shortestPath {
