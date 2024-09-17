@@ -18,7 +18,7 @@ let wallMode = false;
 let selectedAlgorithm = 'dijkstra';
 let cellSize = 25; // Size of each cell in pixels
 export let gridWidth = 60; // Default grid columns
-export let gridHeight = 24; // Default grid rows
+export let gridHeight = 25; // Default grid rows
 
 window.onload = () => {
   grid = getInitialGrid();
@@ -56,6 +56,14 @@ window.onload = () => {
   aStarMenuItem.addEventListener('click', () => {
     selectedAlgorithm = 'astar';
   });
+
+  const generateMazeButton = document.getElementById('generate-maze-button');
+if (generateMazeButton) {
+  generateMazeButton.addEventListener('click', generateMaze);
+} else {
+  console.error('Generate Maze button not found.');
+}
+
 
   // Set up event listener for the start button
   startButton.addEventListener('click', () => {
@@ -110,6 +118,67 @@ function placeRandomWalls(density = 0.2) {
 
   updateGrid();
 }
+/*
+function generateMaze() {
+  // Reset the grid
+  console.log("Maze generation started");
+  grid = getInitialGrid();
+  console.log("Initial grid loaded", grid);
+
+  const stack = [];
+  const visited = new Set();
+  
+  const startRow = Math.floor(Math.random() * gridHeight);
+  const startCol = Math.floor(Math.random() * gridWidth);
+  console.log(`Start at: row ${startRow}, col ${startCol}`);
+
+  stack.push([startRow, startCol]);
+  visited.add(`${startRow},${startCol}`);
+  console.log("Visited set initialized", visited);
+
+  const directions = [
+    [-2, 0], // Up
+    [2, 0],  // Down
+    [0, -2], // Left
+    [0, 2]   // Right
+  ];
+
+  while (stack.length > 0) {
+    const [row, col] = stack.pop();
+    console.log(`Processing cell: row ${row}, col ${col}`);
+    grid[row][col].isWall = false; // Ensure starting point is not a wall
+
+    // Shuffle directions to create a random maze
+    directions.sort(() => Math.random() - 0.5);
+    console.log("Directions shuffled", directions);
+
+    for (const [dRow, dCol] of directions) {
+      const newRow = row + dRow;
+      const newCol = col + dCol;
+      const betweenRow = Math.floor(row + dRow / 2);
+      const betweenCol = Math.floor(col + dCol / 2);
+
+      if (
+        newRow >= 0 && newRow < gridHeight &&
+        newCol >= 0 && newCol < gridWidth &&
+        !visited.has(`${newRow},${newCol}`)
+      ) {
+        console.log(`Carving path to: row ${newRow}, col ${newCol}`);
+        grid[betweenRow][betweenCol].isWall = false; // Remove wall between cells
+        grid[newRow][newCol].isWall = false; // Remove wall at new cell
+        visited.add(`${newRow},${newCol}`);
+        stack.push([newRow, newCol]);
+      }else {
+        console.log(`Skipping cell: row ${newRow}, col ${newCol}`);
+      }
+    }
+  }
+  console.log("Maze generation completed");
+  updateGrid();
+  console.log("Final grid state:", grid);
+
+}*/
+
 
 // Handle mouse up event to stop dragging or wall placement
 function handleMouseUp() {
@@ -307,7 +376,7 @@ function adjustGridToScreenSize() {
   gridWidth = Math.floor(screenWidth / cellSize);
   
   // Dynamically calculate rows based on the available height
-  gridHeight = Math.floor((screenHeight * 0.8) / cellSize); // 80% of the height for the grid
+  gridHeight = Math.floor((screenHeight * 0.86) / cellSize); // 80% of the height for the grid
 
   // Ensure the new grid dimensions are valid
   if (gridWidth < 2 || gridHeight < 2) return; // At least 2x2 grid is needed

@@ -2,7 +2,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, 25px); /* Auto-adjust the columns based on cell size */
   justify-content: center; /* Centers the grid horizontally */
-  margin: 20px auto;
+  margin: 5px auto;
   /* margin-top: 5px;
   margin-left: 15px;
   margin-right: 15px;*/
@@ -20,6 +20,35 @@
 
 .navbar-brand {
   color: white;
+  font-size: 2rem;
+}
+
+/* Increase the font size of the navbar links */
+.nav-link {
+  font-size: 1.5rem; /* Adjust this value to make the text larger */
+  padding: 10px 20px; /* Increase padding to make the buttons appear bigger */
+}
+
+/* Increase the font size of the dropdown items */
+.dropdown-item {
+  font-size: 1.25rem; /* Increase dropdown item font size */
+}
+
+/* Increase size of the random wall button */
+#random-wall-button,
+#wall-button,
+#start-button,
+#clear-button {
+  font-size: 1.5rem; /* Increase button font size */
+  padding: 12px 24px; /* Increase padding for bigger buttons */
+}
+
+/* Increase size for weight buttons */
+#light-weight-button,
+#medium-weight-button,
+#heavy-weight-button {
+  font-size: 2.5rem; /* Increase weight button font size */
+  padding: 10px 20px; /* Increase padding to make the buttons larger */
 }
 
 /* Change the navbar-toggler button color to white */
@@ -33,6 +62,17 @@
   background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='white' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
 }
 
+#random-wall-button {
+  background-color: #605448;
+  color: white;
+  border: 2px solid rgb(0, 0, 0);
+  border-radius: 5px;
+  padding-inline: 8px;
+  padding-block: 0px;
+  margin-top: 7px;
+  margin-right: 7px;
+}
+
 #wall-button {
   background-color: rgb(133, 133, 133);
   color: white;
@@ -41,7 +81,7 @@
   padding-inline: 12px;
   padding-block: 0px;
   margin-top: 7px;
-  margin-inline: 7px;
+  margin-right: 7px;
 }
 
 #start-button {
